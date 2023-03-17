@@ -1,9 +1,16 @@
+
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const express = require("express");
 
 const cors = require("cors");
 
 const authRotes = require("./routes/auth");
-require("dotenv").config();
+
+const client = require("./configs/db");
+
 const app = express();
 
 app.use(express.json());
@@ -11,8 +18,15 @@ app.use(cors());
 
 const port = process.env.PORT || 8000;
 
+
 app.get('/',(req,res)=>{
     res.status(200).send('server is up and running');
+})
+
+app.use("/auth",authRotes);
+
+client.connect(()=>{
+    console.log("connected to database");
 })
 
 app.listen(port,()=>{
