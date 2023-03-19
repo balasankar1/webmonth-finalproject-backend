@@ -8,7 +8,7 @@ const cors = require("cors");
 
 const authRotes = require("./routes/auth");
 
-const noteRoutes = require("./routes/note");
+const noteRoutes = require("./routes/notes");
 
 const client = require("./configs/db");
 
@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRotes);
-app.use("/note", noteRoutes);
+app.use("/notes", noteRoutes);
 
 client.connect(() => {
   console.log("connected to database");
