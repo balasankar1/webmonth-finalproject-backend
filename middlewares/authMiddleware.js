@@ -19,10 +19,7 @@ exports.verifyToken = (req, res, next) => {
             message: "invalidToken",
           });
         } else {
-          console.log("hi");
           req.email = userEmail;
-          console.log(req.email);
-          console.log("hi");
           next();
         }
       })
@@ -32,6 +29,4 @@ exports.verifyToken = (req, res, next) => {
         });
       });
   });
-
-  next();
 };

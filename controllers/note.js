@@ -1,7 +1,7 @@
 const client = require("../configs/db");
 exports.addNote = (req, res) => {
   const { heading, content } = req.body;
-  console.log(req.email);
+  // console.log(req.email);
   client
     .query(
       `INSERT INTO notes (email,heading,content) VALUES('${req.email}','${heading}','${content}');`
@@ -31,7 +31,8 @@ exports.getAllNotes = (req, res) => {
         };
       });
       res.status(200).json({
-        message: "note receivedd successfully",
+        message: "note received successfully",
+        data: filteredData,
       });
     })
     .catch((err) => {
@@ -49,32 +50,56 @@ exports.updateNote = (req, res) => {
       `UPDATE notes SET heading = '${heading}', content = '${content}' WHERE noteid = '${noteId}';`
     )
     .then((data) => {
-      res
-        .status(200)
-        .json({
-          message: "success",
-        })
-        .catch((err) => {
-          res.status(400).json({
-            message: "Database error occured",
-          });
-        });
+      res.status(200).json({
+        message: "success",
+      });
+    })
+    .catch((err) => {
+      res.status(400).json({
+        message: "Database error occured",
+      });
     });
 };
 
 exports.deleteNote = (req, res) => {
   const noteId = req.params.noteId;
-  const { heading, content } = req.body;
-  client.query(`DELETE FROM notes WHERE noteid = '${noteId}';`).then((data) => {
-    res
-      .status(200)
-      .json({
+  client
+    .query(`DELETE FROM notes WHERE noteid = '${noteId}';`)
+    .then((data) => {
+      res.status(200).json({
         message: "success",
-      })
-      .catch((err) => {
-        res.status(400).json({
-          message: "Database error occured",
-        });
       });
-  });
+    })
+    .catch((err) => {
+      res.status(400).json({
+        message: "Database error occured",
+      });
+    });
+};
+
+exports.displayNote = (req, res) => {
+  const noteId = req.params.noteId;
+
+  client
+    .query(`SELECT heading,content FROM notes WHERE noteid = '${noteId}';`)
+    .then((data) => {
+      const noteData = data.rows;
+      const filteredData = noteData.map((note) => {
+        return {
+          noteId: note.noteid,
+          heading: note.heading,
+          content: note.content,
+        };
+      });
+      res.status(200).json({
+        messaage: "Success",
+        data: filteredData,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({
+        message: "DB error occurred",
+      });
+    });
 };
